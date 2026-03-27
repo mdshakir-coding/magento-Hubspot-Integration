@@ -56,7 +56,7 @@ async function syncCustomers() {
 
       logger.info(`🆕 Created Contact ID: ${JSON.stringify(contactId)}`);
 
-      return;
+      return; //todo remove
 
 
 
