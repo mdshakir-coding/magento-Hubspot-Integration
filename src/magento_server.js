@@ -4,7 +4,7 @@ import express from "express";
 import app from "./app.js";
 import logger from "./utils/logger.js";
 import cronSchedular from "./crons/cronSchedular.js";
-import{syncCustomers} from "./controller/customerSync.controller.js";
+import{syncCustomers} from "./controller/customertoContact.controller.js";
 
 
 // logger.info("Loaded API Token:", process.env.HUBSPOT_ACCESS_TOKEN);

@@ -54,12 +54,20 @@ async function getMagentoCustomers() {
 
     const data = JSON.parse(response);
 
-    console.log("✅ Customers:", data);
+    // console.log("✅ Customers:", data);
     return data;
   } catch (err) {
     console.error("❌ Error:", err.message);
   }
 }
+
+
+
+
+
+
+
+
 
 export { getMagentoCustomers };
 

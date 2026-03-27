@@ -1,0 +1,75 @@
+import logger from "../utils/logger.js";
+import { getMagentoCustomers } from "../services/magento.js";
+import { buildCustomerPayload } from "../utils/customertocontact.mapping.js";
+import{searchHubspotContactByEmail} from "../services/hubspot.js";
+import{updateHubspotContact} from "../services/hubspot.js";
+import{createHubspotContact} from "../services/hubspot.js";
+
+
+async function syncCustomers() {
+  try {
+    // Fetch Magento Customers data
+    const allCustomersResponse = await getMagentoCustomers();
+    const allCustomers = allCustomersResponse?.items || []; // safe fallback
+    // logger.info(
+    //   "✅ Successfully synced customers:",
+    //   `${allCustomers.length} customers fetched`,
+    // );
+  // return;
+  for (const customer of allCustomers) {
+    logger.info(
+  `🎯 First Customer:\n${JSON.stringify(customer, null, 2)}`
+);
+  try {
+    const customerPayload = await buildCustomerPayload(customer);
+
+    logger.info(
+      `✅ Customer Payload:\n${JSON.stringify(customerPayload, null, 2)}`
+    );
+      // return; //todo remove
+    const existingContact = await searchHubspotContactByEmail(
+      customerPayload.email
+    );
+
+    logger.info(
+      `✅ Search Result for ${customerPayload.email}:\n${JSON.stringify(
+        existingContact,
+        null,
+        2
+      )}`
+    );
+    // break;
+
+    let contactId;
+
+    if (existingContact?.id) {
+      // ✅ UPDATE FLOW
+      contactId = await updateHubspotContact(
+        existingContact.id,
+        customerPayload
+      );
+
+      logger.info(`✅ Updated Contact ID: ${JSON.stringify(contactId, null, 2)} | ID: ${contactId,null,2}`);
+    } else {
+      // ✅ CREATE FLOW (THIS IS YOUR CURRENT CASE)
+      contactId = await createHubspotContact(customerPayload);
+
+      logger.info(`🆕 Created Contact ID: ${JSON.stringify(contactId)}`);
+
+      return;
+
+
+
+    }
+  } catch (error) {
+    logger.error(`❌ Error processing customer ${customer.id}:`, error);
+  }
+}
+  } catch (error) {
+    logger.error("❌ Error syncing customers:", error);
+}
+   
+  
+}
+
+export { syncCustomers };
