@@ -13,9 +13,9 @@ function getCustomAttribute(product, code) {
 }
 
 function buildProductPayload(product) {
-  const description = getCustomAttribute(product, "description");
-  const shortDescription = getCustomAttribute(product, "short_description");
-  const urlKey = getCustomAttribute(product, "url_key");
+  const description = getCustomAttribute(product.description);
+  const shortDescription = getCustomAttribute(product.short_description);
+  const urlKey = getCustomAttribute(product.url_key);
 
   return {
     properties: {
