@@ -11,8 +11,18 @@ function buildOrdersPayload(order) {
       hs_billing_address_email: order?.customer_email || null,
       hs_order_name: order?.items?.[0]?.name || null, // fixed
 
-
+      // Billing Address
       hs_billing_address_street: order?.billing_address?.street?.join(", ") || null,
+      hs_billing_address_city: order?.billing_address?.city || null,
+      hs_billing_address_state: order?.billing_address?.region || null,
+      hs_billing_address_postal_code: order?.billing_address?.postcode || null,
+      hs_billing_address_country: order?.billing_address?.country_id || null,
+      // hs_billing_address_company: order?.billing_address?.company || null,
+      hs_billing_address_phone: order?.billing_address?.telephone || null,
+      hs_billing_address_name: order?.billing_address?.firstname && order?.billing_address?.lastname,
+      
+      
+      // Order totals
 
     },
   };

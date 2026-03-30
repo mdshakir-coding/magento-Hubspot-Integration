@@ -2,6 +2,7 @@ import axios from "axios";
 import logger from "../utils/logger.js";
 import { buildProductPayload } from "../utils/productToProducts.mapping.js";
 import { buildOrdersPayload } from "../utils/ordersToDeal.Mapping.js";
+import { buildCustomerPayload } from "../utils/customertocontact.mapping.js";
 
 
 // SEARCH CONTACT BY EMAIL
@@ -114,6 +115,56 @@ async function createHubspotContact(properties) {
       "❌ Error creating contact:",
       error.response?.data || error.message
     );
+    return null;
+  }
+}
+
+// Using Upsert Logic for Contact (Combined Search + Update/Create)
+
+// UPSERT HUBSPOT CONTACT
+async function upsertHubspotContact(customer) {
+  try {
+    // 1️⃣ Build payload
+    const customerPayload = buildCustomerPayload(customer);
+
+    // 2️⃣ Normalize email
+    const email = customerPayload?.email?.toLowerCase()?.trim();
+    if (!email) {
+      logger.error("❌ Cannot upsert contact without email");
+      return null;
+    }
+
+    // 3️⃣ Search for existing contact by email
+    const existingContact = await searchHubspotContactByEmail(email);
+    logger.info(
+      `🔍 Search Result for Email ${email}:\n${JSON.stringify(existingContact, null, 2)}`
+    );
+
+    // 4️⃣ Update if exists
+    if (existingContact?.id) {
+      logger.info(`🔄 Contact exists. Updating Email: ${email}`);
+      const updatedContact = await updateHubspotContact(existingContact.id, customerPayload);
+      if (updatedContact?.id) {
+        logger.info(`✅ Contact upserted (updated) | ID: ${JSON.stringify(updatedContact, null, 2)} ;`);
+        return updatedContact.id;
+      } else {
+        logger.error(`❌ Failed to update contact ID: ${JSON.stringify(existingContact, null, 2)}`);
+        return null;
+      }
+    }
+
+    // 5️⃣ Create if not exists
+    logger.info(`➕ Contact does not exist. Creating Email: ${email}`);
+    const createdContactId = await createHubspotContact(customerPayload);
+    if (createdContactId) {
+      logger.info(`✅ Contact upserted (created) | ID: ${JSON.stringify(createdContactId, null, 2)}`);
+      return createdContactId;
+    }
+
+    return null;
+
+  } catch (error) {
+    logger.error("❌ Error in upsertHubspotContact:", error.message);
     return null;
   }
 }
@@ -390,7 +441,26 @@ async function upsertHubspotOrder(order) {
   }
 }
 
-
+async function associateContactWithDeal(contactId, dealId) {
+  await axios.put(
+    `https://api.hubapi.com/crm/v3/associations/contacts/deals/batch/create`,
+    {
+      inputs: [
+        {
+          from: { id: contactId },
+          to: { id: dealId },
+          type: "contact_to_deal"
+        }
+      ]
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`,
+        "Content-Type": "application/json"
+      }
+    }
+  );
+}
 
 
 export { searchHubspotContactByEmail,
@@ -403,7 +473,9 @@ upsertHubspotProduct,
 upsertHubspotOrder,
 searchHubspotOrderByExternalId,
 updateHubspotOrder,
-createHubspotOrder
+createHubspotOrder,
+upsertHubspotContact,
+associateContactWithDeal
 
 
 };

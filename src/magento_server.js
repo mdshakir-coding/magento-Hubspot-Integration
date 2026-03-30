@@ -13,9 +13,9 @@ import{syncOrders} from "./controller/ordersToDeal.controller.js";
 const PORT = process.env.PORT || 3700;
 
 app.listen(PORT, () => {
-  // syncCustomers();
+  syncCustomers();
   // syncProducts();
-  syncOrders();
+  // syncOrders();
 
 
   logger.info(`Server running on port ${PORT}`);
