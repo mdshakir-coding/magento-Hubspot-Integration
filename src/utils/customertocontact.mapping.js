@@ -127,6 +127,9 @@ function buildCustomerPayload(customer) {
     country: safeString(address?.country_id),
 
     fax: safeString(address?.fax),
+    website: safeString(customer?.website_id),
+
+    // account: safeString(customer?.created_in),
 
     // ✅ FIXED date (IMPORTANT)
     // website: customer?.created_in,

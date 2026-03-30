@@ -9,8 +9,8 @@ import{createHubspotContact} from "../services/hubspot.js";
 async function syncCustomers() {
   try {
     // Fetch Magento Customers data
-    const allCustomersResponse = await getMagentoCustomers();
-    const allCustomers = allCustomersResponse?.items || []; // safe fallback
+    const allCustomers = await getMagentoCustomers();
+    
     // logger.info(
     //   "✅ Successfully synced customers:",
     //   `${allCustomers.length} customers fetched`,
@@ -18,15 +18,20 @@ async function syncCustomers() {
   // return;
   for (const customer of allCustomers) {
     logger.info(
-  `🎯 First Customer:\n${JSON.stringify(customer, null, 2)}`
+  `[Magento] Customer Record  :\n${JSON.stringify(customer, null, 2)}`
 );
+
   try {
-    const customerPayload = await buildCustomerPayload(customer);
+    // ✅ Build HubSpot Contact Payload
+    const customerPayload =  buildCustomerPayload(customer);
 
     logger.info(
       `✅ Customer Payload:\n${JSON.stringify(customerPayload, null, 2)}`
     );
       // return; //todo remove
+
+      // ✅ Search for existing contact in HubSpot by email
+
     const existingContact = await searchHubspotContactByEmail(
       customerPayload.email
     );
