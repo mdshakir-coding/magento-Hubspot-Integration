@@ -5,6 +5,7 @@ import cloudscraper from "cloudscraper";
 import OAuth from "oauth-1.0a";
 import crypto from "crypto";
 import { all } from "axios";
+import  logger  from "../utils/logger.js";
 
 // 🔐 Your credentials
 const consumer = {
@@ -177,7 +178,7 @@ async function getMagentoOrders() {
       const data = JSON.parse(response);
       const orders = data.items || [];
 
-      console.log(`🧾 Page ${currentPage}: ${orders.length} orders`);
+      logger.info(`🧾 Page ${currentPage}: ${orders.length} orders`);
 
       // ✅ Add to master list
       allOrders.push(...orders);
@@ -191,12 +192,12 @@ async function getMagentoOrders() {
       }
 
     } catch (err) {
-      console.error(`❌ Error on page ${currentPage}:`, err.message);
+      logger.error(`❌ Error on page ${currentPage}:`, err.message);
       break;
     }
   }
 
-  console.log(`✅ Total Orders Fetched: ${allOrders.length}`);
+  logger.info(`✅ Total Orders Fetched: ${allOrders.length}`);
   return allOrders;
 }
 

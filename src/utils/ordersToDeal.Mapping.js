@@ -62,31 +62,20 @@
 //       //   order?.extension_attributes?.shipping_assignments?.[0]?.shipping
 //       //     ?.address?.telephone || null,
 
-      
-  
-
-
-     
 //     },
 //   };
 // }
 
-
-
-
-
 function buildOrdersPayload(order) {
   return {
     properties: {
-      sourceid: order?.increment_id ||null, 
-      dealname: order?.items?.[0]?.name ||null,
+      sourceid: order?.increment_id || null,
+      dealname: order?.store_name || null,
       amount: order?.shipping_amount || null,
-       
-          
-    }
+      pipeline: "884026284", // Set to your desired pipeline
+
+    },
   };
 }
-
-
 
 export { buildOrdersPayload };

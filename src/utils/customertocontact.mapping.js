@@ -93,6 +93,7 @@ function safeString(value) {
 
 function buildCustomerPayload(customer) {
   const address = customer?.addresses?.[0] || {};
+  customer.email = "taylor.gebben@intertek.com";
 
   return {
   
@@ -105,7 +106,11 @@ function buildCustomerPayload(customer) {
 
     firstname: safeString(customer?.firstname),
     lastname: safeString(customer?.lastname),
-    email: safeString(customer?.email),
+    // email: safeString(customer?.email),
+    
+
+email: safeString(customer.email),
+   
 
     phone: safeString(address?.telephone),
     company: safeString(address?.company),

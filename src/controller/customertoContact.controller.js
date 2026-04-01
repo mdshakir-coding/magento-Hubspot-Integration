@@ -14,64 +14,13 @@ async function syncCustomers() {
   try {
     // Fetch Magento Customers data
     const allCustomers = await getMagentoCustomers();
+   
 
-    // logger.info(
-    //   "✅ Successfully synced customers:",
-    //   `${allCustomers.length} customers fetched`,
-    // );
-    // return;
     for (const customer of allCustomers) {
+  
       logger.info(
-        `[Magento] Customer Record  :\n${JSON.stringify(customer, null, 2)}`,
+        `[Magento] Customer Record:\n${JSON.stringify(customer, null, 2)}`
       );
-
-      // try {
-      //   // ✅ Build HubSpot Contact Payload
-      //   const customerPayload =  buildCustomerPayload(customer);
-
-      //   logger.info(
-      //     `✅ Customer Payload:\n${JSON.stringify(customerPayload, null, 2)}`
-      //   );
-      //     // return; //todo remove
-
-      //     // ✅ Search for existing contact in HubSpot by email
-
-      //   const existingContact = await searchHubspotContactByEmail(
-      //     customerPayload.email
-      //   );
-
-      //   logger.info(
-      //     `✅ Search Result for ${customerPayload.email}:\n${JSON.stringify(
-      //       existingContact,
-      //       null,
-      //       2
-      //     )}`
-      //   );
-      //   // break;
-
-      //   let contactId;
-
-      //   if (existingContact?.id) {
-      //     // ✅ UPDATE FLOW
-      //     contactId = await updateHubspotContact(
-      //       existingContact.id,
-      //       customerPayload
-      //     );
-
-      //     logger.info(`✅ Updated Contact ID: ${JSON.stringify(contactId, null, 2)} | ID: ${contactId,null,2}`);
-      //   } else {
-      //     // ✅ CREATE FLOW (THIS IS YOUR CURRENT CASE)
-      //     contactId = await createHubspotContact(customerPayload);
-
-      //     logger.info(`🆕 Created Contact ID: ${JSON.stringify(contactId)}`);
-
-      //     return; //todo remove
-
-      //   }
-      // } catch (error) {
-      //   logger.error(`❌ Error processing customer ${customer.id}:`, error);
-      // }
-
       try {
         // Build the HubSpot payload
         const customerPayload = buildCustomerPayload(customer);
@@ -79,7 +28,7 @@ async function syncCustomers() {
         logger.info(
           `✅ Customer Payload:\n${JSON.stringify(customerPayload, null, 2)}`,
         );
-
+        // break;
         // Upsert customer to HubSpot
         let upsertedContactId = null;
         upsertedContactId = await upsertHubspotContact(customer);
@@ -93,11 +42,10 @@ async function syncCustomers() {
             `❌ Failed to upsert contact for customer ID: ${JSON.stringify(customer.id)}`,
           );
         }
-
         
         
       } catch (error) {
-        logger.error(`❌ Error processing customer ${customer.id}:`, error);
+        logger.error(`❌ Error processing customer ${JSON.stringify(customer.id)}:`, error);
       }
     }
   } catch (error) {

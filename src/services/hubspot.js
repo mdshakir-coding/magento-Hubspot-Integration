@@ -4,9 +4,6 @@ import { buildProductPayload } from "../utils/productToProducts.mapping.js";
 import { buildOrdersPayload } from "../utils/ordersToDeal.Mapping.js";
 import { buildCustomerPayload } from "../utils/customertocontact.mapping.js";
 
-
-
-
 // SEARCH CONTACT BY EMAIL
 
 async function searchHubspotContactByEmail(email) {
@@ -37,7 +34,7 @@ async function searchHubspotContactByEmail(email) {
           Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     const results = response.data.results;
@@ -47,18 +44,16 @@ async function searchHubspotContactByEmail(email) {
     }
 
     return results[0];
-
   } catch (error) {
     console.error(
       "❌ Error searching HubSpot contact:",
-      error.response?.data || error.message
+      error.response?.data || error.message,
     );
     return null;
   }
 }
 
-
-//  Update HubSpot contact 
+//  Update HubSpot contact
 
 async function updateHubspotContact(contactId, properties) {
   try {
@@ -72,22 +67,20 @@ async function updateHubspotContact(contactId, properties) {
           Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     logger.info(`🔄 Contact updated successfully | ID: ${contactId}`);
 
     return response.data;
-
   } catch (error) {
     console.error(
       "❌ Error updating contact:",
-      error.response?.data || error.message
+      error.response?.data || error.message,
     );
     return null;
   }
 }
-
 
 // create HubSpot contact if not exists
 
@@ -103,7 +96,7 @@ async function createHubspotContact(properties) {
           Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     const contactId = response.data.id;
@@ -111,17 +104,15 @@ async function createHubspotContact(properties) {
     logger.info(`🆕 Contact created successfully | ID: ${contactId}`);
 
     return contactId;
-
   } catch (error) {
     console.error(
       "❌ Error creating contact:",
-      error.response?.data || error.message
+      error.response?.data || error.message,
     );
     return null;
   }
 }
 
-// Using Upsert Logic for Contact (Combined Search + Update/Create)
 
 // UPSERT HUBSPOT CONTACT
 async function upsertHubspotContact(customer) {
@@ -136,21 +127,29 @@ async function upsertHubspotContact(customer) {
       return null;
     }
 
+
     // 3️⃣ Search for existing contact by email
     const existingContact = await searchHubspotContactByEmail(email);
     logger.info(
-      `🔍 Search Result for Email ${email}:\n${JSON.stringify(existingContact, null, 2)}`
+      `🔍 Search Result for Email ${email}:\n${JSON.stringify(existingContact, null, 2)}`,
     );
 
     // 4️⃣ Update if exists
     if (existingContact?.id) {
       logger.info(`🔄 Contact exists. Updating Email: ${email}`);
-      const updatedContact = await updateHubspotContact(existingContact.id, customerPayload);
+      const updatedContact = await updateHubspotContact(
+        existingContact.id,
+        customerPayload,
+      );
       if (updatedContact?.id) {
-        logger.info(`✅ Contact upserted (updated) | ID: ${JSON.stringify(updatedContact, null, 2)} ;`);
+        logger.info(
+          `✅ Contact upserted (updated) | ID: ${JSON.stringify(updatedContact, null, 2)} ;`,
+        );
         return updatedContact.id;
       } else {
-        logger.error(`❌ Failed to update contact ID: ${JSON.stringify(existingContact, null, 2)}`);
+        logger.error(
+          `❌ Failed to update contact ID: ${JSON.stringify(existingContact, null, 2)}`,
+        );
         return null;
       }
     }
@@ -159,21 +158,20 @@ async function upsertHubspotContact(customer) {
     logger.info(`➕ Contact does not exist. Creating Email: ${email}`);
     const createdContactId = await createHubspotContact(customerPayload);
     if (createdContactId) {
-      logger.info(`✅ Contact upserted (created) | ID: ${JSON.stringify(createdContactId, null, 2)}`);
+      logger.info(
+        `✅ Contact upserted (created) | ID: ${JSON.stringify(createdContactId, null, 2)}`,
+      );
       return createdContactId;
     }
 
     return null;
-
   } catch (error) {
     logger.error("❌ Error in upsertHubspotContact:", error.message);
     return null;
   }
 }
 
-
 // Search Products Fnction
-
 
 async function searchHubspotProductBySku(sku) {
   try {
@@ -201,23 +199,22 @@ async function searchHubspotProductBySku(sku) {
           Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     const results = response.data.results;
 
     if (!results || results.length === 0) {
-      console.log(`🔍 No product found for SKU: ${sku}`);
+      logger.info(`🔍 No product found for SKU: ${sku}`);
       return null;
     }
 
     logger.info(`✅ Product found for SKU: ${sku}`);
     return results[0];
-
   } catch (error) {
     logger.error(
       "❌ Error searching product:",
-      error.response?.data || error.message
+      error.response?.data || error.message,
     );
     return null;
   }
@@ -238,17 +235,16 @@ async function updateHubspotProduct(productId, productPayload) {
           Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     logger.info(`🔄 Updated Product ID: ${JSON.stringify(productId)}`);
 
     return response.data;
-
   } catch (error) {
     logger.error(
       "❌ Error updating product:",
-      error.response?.data || error.message
+      error.response?.data || error.message,
     );
     return null;
   }
@@ -266,30 +262,29 @@ async function createHubspotProduct(productPayload) {
           Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
-    logger.info(
-      `➕ Created Product: ${productPayload.properties.hs_sku}`
-    );
+    logger.info(`➕ Created Product: ${productPayload.properties.hs_sku}`);
 
     return response.data;
-
   } catch (error) {
     logger.error(
       "❌ Error creating product:",
-      error.response?.data || error.message
+      error.response?.data || error.message,
     );
     return null;
   }
 }
 
-
 async function upsertHubspotProduct(product) {
   try {
     // Build HubSpot payload here
     const productPayload = buildProductPayload(product);
+    logger.info(
+      `✅ Product Payload:\n${JSON.stringify(productPayload, null, 2)}`,)
     const sku = product?.sku;
+    
 
     if (!sku) {
       logger.error("❌ SKU missing, skipping product");
@@ -299,19 +294,22 @@ async function upsertHubspotProduct(product) {
     // Search
     const existingProduct = await searchHubspotProductBySku(sku);
     logger.info(
-      `🔍 Search Result for SKU ${sku}:\n${JSON.stringify(existingProduct, null, 2)}`
+      `🔍 Search Result for SKU ${sku}:\n${JSON.stringify(existingProduct, null, 2)}`,
     );
 
     // Update if exists
     if (existingProduct?.id) {
-      logger.info(`🔄 Product exists. Updating SKU: ${JSON.stringify(existingProduct,null,2)}`);
+      logger.info(
+        `🔄 Product exists. Updating SKU: ${JSON.stringify(existingProduct, null, 2)}`,
+      );
       return await updateHubspotProduct(existingProduct.id, productPayload);
     }
 
     // Create if not exists
-    logger.info(`➕ Product does not exist. Creating SKU: ${JSON.stringify(sku,null,2)}`);
+    logger.info(
+      `➕ Product does not exist. Creating SKU: ${JSON.stringify(sku, null, 2)}`,
+    );
     return await createHubspotProduct(productPayload);
-
   } catch (error) {
     logger.error("❌ Error in upsertHubspotProduct:", error.message);
     return null;
@@ -319,67 +317,44 @@ async function upsertHubspotProduct(product) {
 }
 
 
-// 
-
-
-// ---------------------------
-// 1️⃣ Search Order by External ID
-// ---------------------------
-// async function searchHubspotOrderByExternalId(externalOrderId) {
-//   try {
-//     const response = await axios.post(
-//       "https://api.hubapi.com/crm/v3/objects/deals/search",
-//       {
-//         filterGroups: [
-//           {
-//             filters: [
-//               {
-//                 propertyName: "hs_external_order_id",
-//                 operator: "EQ",
-//                 value: externalOrderId,
-//               },
-//             ],
-//           },
-//         ],
-//         properties: ["hs_external_order_id", "hs_order_name", "hs_order_status"],
-//         limit: 1,
-//       },
-//       {
-//         headers: {
-//           Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`,
-//           "Content-Type": "application/json",
-//         },
-//       }
-//     );
-
-//     return response.data.results?.[0] || null;
-//   } catch (error) {
-//     console.error("❌ Error searching HubSpot Order:", error.message);
-//     return null;
-//   }
-// }
-
-
-async function searchDealsBasic() {
+async function searchDealsBySourceId(sourceid) {
   try {
     const response = await axios.post(
       "https://api.hubapi.com/crm/v3/objects/deals/search",
       {
-        limit: 1
+        filterGroups: [
+          {
+            filters: [
+              {
+                propertyName: "sourceid",   // 👈 your custom property
+                operator: "EQ",
+                value: sourceid.toString(),
+              },
+            ],
+          },
+        ],
+        limit: 1,
+        properties: ["dealname", "amount", "sourceid"], // optional but useful
       },
       {
         headers: {
-          Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`, // 🔐 use env, not hardcoded token
-          "Content-Type": "application/json"
-        }
+          Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`,
+          "Content-Type": "application/json",
+        },
       }
     );
 
-    // logger.info("✅ Deals Response:", JSON.stringify(response.data, null, 2));
-    return response.data;
+    const deal = response.data?.results?.[0] || null;
 
+    if (deal) {
+      console.log("✅ Deal Found:", deal.id);
+    } else {
+      console.log("❌ No deal found for sourceid:", sourceid);
+    }
+
+    return deal;
   } catch (error) {
-    logger.error(
+    console.error(
       "❌ Error searching deals:",
       error.response?.data || error.message
     );
@@ -387,37 +362,12 @@ async function searchDealsBasic() {
   }
 }
 
-// ---------------------------
-// 2️⃣ Update Existing HubSpot Order
-// ---------------------------
-// async function updateHubspotOrder(orderId, payload) {
-//   try {
-//     const response = await axios.patch(
-//       `https://api.hubapi.com/crm/v3/objects/orders/${orderId}`,
-//       payload,
-//       {
-//         headers: {
-//           Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`,
-//           "Content-Type": "application/json",
-//         },
-//       }
-//     );
 
-//     logger.info(`✅ Updated Order ID ${orderId} successfully`);
-//     return response.data;
-//   } catch (error) {
-//     logger.error(`❌ Error updating HubSpot Order ${orderId}:`, error.message);
-//     return null;
-//   }
-// }
 
-async function updateHubspotOrder(orderId, properties) {
+async function updateHubspotOrder(orderId, payload) {
   try {
-    // HubSpot expects PATCH payload in "properties" key
-    const payload = { properties };
 
     const response = await axios.patch(
-      // Use 'deals' if this is actually an order represented as a deal
       `https://api.hubapi.com/crm/v3/objects/deals/${orderId}`,
       payload,
       {
@@ -428,11 +378,11 @@ async function updateHubspotOrder(orderId, properties) {
       }
     );
 
-    logger.info(`✅ Updated Order/Deal ID ${orderId} successfully`);
+    logger.info(`✅ Updated Deal ID ${orderId} successfully`);
     return response.data;
   } catch (error) {
     logger.error(
-      `❌ Error updating HubSpot Order/Deal ${orderId}:`,
+      `❌ Error updating HubSpot Deal ${orderId}:`,
       error.response?.data || error.message
     );
     return null;
@@ -452,7 +402,7 @@ async function createHubspotOrder(orderPayload) {
           Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     logger.info(`✅ Created new HubSpot deals successfully`);
@@ -463,146 +413,23 @@ async function createHubspotOrder(orderPayload) {
   }
 }
 
-//
-
-
-
-// async function createHubspotOrder(payload) {
-//   try {
-//     // HubSpot expects flat properties, no nested objects
-//     const payload = { properties };
-
-//     const response = await axios.post(
-//       "https://api.hubapi.com/crm/v3/objects/deals",  // using deals endpoint
-//       payload,
-//       {
-//         headers: {
-//           Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`,
-//           "Content-Type": "application/json",
-//         },
-//       }
-//     );
-
-//     logger.info(
-//       `✅ Created new HubSpot Order/Deal successfully: ${response.data.id}`
-//     );
-//     return response.data;
-//   } catch (error) {
-//     logger.error(
-//       "❌ Error creating HubSpot Order/Deal:",
-//       error.response?.data || error.message
-//     );
-//     return null;
-//   }
-// }
-
-
-
-
-
-
-// Upsert Order (Combined Logic)
-// async function upsertHubspotOrder(order) {
-//   try {
-//     const orderPayload = buildOrdersPayload(order);
-//     const sourceid = order?.increment_id || null;
-
-//     if (!sourceid) {
-//       logger.error("❌ Source ID missing, skipping order");
-//       return null;
-//     }
-    
-
-//     const existingOrder = await searchDealsBasic(sourceid);
-//     logger.info(
-//       `🔍 Search Result for Order ID ${sourceid}:\n${JSON.stringify(existingOrder, null, 2)}`
-//     );
-
-//     if (existingOrder?.id) {
-//       logger.info(`🔄 Order exists. Updating Source ID: ${JSON.stringify(sourceid,null,2)}`);
-      
-//       return await updateHubspotOrder(existingOrder.id, orderPayload);
-      
-//     }
-
-//     logger.info(`➕ Order does not exist. Creating External Order ID: ${JSON.stringify(externalOrderId,null,2)}`);
-//     return await createHubspotOrder(orderPayload);
-
-//   } catch (error) {
-//     logger.error("❌ Error in upsertHubspotOrder:", error.message);
-//     return null;
-//   }
-// }
-
-
-
-
-// Associate Contact with Deal (Order)
-
-
-// async function associateContactWithDeal({ contactId, dealId }) {
-//   try {
-//     if (!contactId || !dealId) {
-//       logger.error("❌ Missing contactId or dealId");
-//       return null;
-//     }
-
-//     // logger.info(`🔗 Associating Contact ${contactId} → Deal ${dealId}`);
-
-//     const response = await axios.put(
-//       `https://api.hubapi.com/crm/v3/objects/deals/${dealId}/associations/contacts/${contactId}/contact_to_deal`,
-//       {}, // required empty body
-//       {
-//         headers: {
-//           Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`,
-//           "Content-Type": "application/json",
-//         },
-//       }
-//     );
-
-//     // logger.info(`✅ Associated Contact (${contactId}) ↔ Deal (${dealId})`);
-
-//     return response.data;
-
-//   } catch (error) {
-//     const errData = error.response?.data;
-//     const msg = errData?.message || error.message;
-
-//     // ✅ Handle duplicate safely
-//     if (msg?.includes("already exists")) {
-//       logger.warn(
-//         `⚠️ Already associated Contact (${contactId}) ↔ Deal (${dealId})`
-//       );
-//       return true;
-//     }
-
-//     logger.error("❌ Association Error DEBUG:", {
-//       message: msg,
-//       status: error.response?.status,
-//       data: errData,
-//     });
-
-//     return null;
-//   }
-// }
-
 // upsert Order with Search → Update/Create Logic
 
 async function upsertHubspotOrder(order) {
   try {
     const orderPayload = buildOrdersPayload(order);
-    
+    logger.info(`✅ deal Payload:\n${JSON.stringify(orderPayload, null, 2)}`);
+
     const sourceid = order?.increment_id;
     if (!sourceid) {
       logger.error("❌ Source ID missing, skipping order");
       return null;
     }
 
-
     // Search existing deal by sourceid
-    const existingOrder = await searchDealsBasic(sourceid);
+    const existingOrder = await searchDealsBySourceId(sourceid);
     logger.info(
-      `🔍 Search Result for Order ID ${sourceid}:\n${JSON.stringify(existingOrder, null, 2)}`
+      `🔍 Search Result for Order ID ${sourceid}:\n${JSON.stringify(existingOrder, null, 2)}`,
     );
 
     if (existingOrder?.id) {
@@ -610,42 +437,19 @@ async function upsertHubspotOrder(order) {
       return await updateHubspotOrder(existingOrder.id, orderPayload);
     }
 
-    logger.info(`➕ Order does not exist. Creating Order with Source ID: ${sourceid}`);
+    logger.info(
+      `➕ Order does not exist. Creating Order with Source ID: ${sourceid}`,
+    );
     return await createHubspotOrder(orderPayload);
-
   } catch (error) {
-    logger.error(`❌ Error in upsertHubspotOrder for Source ID: ${order?.increment_id}`, error.message);
+    logger.error(
+      `❌ Error in upsertHubspotOrder for Source ID: ${order?.increment_id}`,
+      error.message,
+    );
     return null;
   }
 }
 
-
-
-
-
-
-// async function associateContactWithDeal({ contactId, dealId }) {
-//   const url = "https://api.hubapi.com/crm/v3/associations/contacts/deals/batch/create";
-
-//   const payload = {
-//     inputs: [
-//       {
-//         from: { id: contactId },
-//         to: { id: dealId },
-//         type: "contact_to_deal"
-//       }
-//     ]
-//   };
-
-//   const response = await axios.post(url, payload, {
-//     headers: {
-//       Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`,
-//       "Content-Type": "application/json"
-//     }
-//   });
-
-//   return response.data;
-// }
 
 async function associateContactWithDeal({ contactId, dealId }) {
   if (!contactId || !dealId) {
@@ -653,7 +457,8 @@ async function associateContactWithDeal({ contactId, dealId }) {
     return null;
   }
 
-  const url = "https://api.hubapi.com/crm/v3/associations/contacts/deals/batch/create";
+  const url =
+    "https://api.hubapi.com/crm/v3/associations/contacts/deals/batch/create";
 
   const payload = {
     inputs: [
@@ -673,18 +478,23 @@ async function associateContactWithDeal({ contactId, dealId }) {
       },
     });
 
-    logger.info(`✅ Associated Contact (${contactId}) ↔ Deal (${dealId}) successfully`);
-    logger.debug(`Association response: ${JSON.stringify(response.data, null, 2)}`);
+    logger.info(
+      `✅ Associated Contact (${contactId}) ↔ Deal (${dealId}) successfully`,
+    );
+    logger.info(
+      `Association response: ${JSON.stringify(response.data, null, 2)}`,
+    );
 
     return response.data;
-
   } catch (error) {
     const errData = error.response?.data;
     const msg = errData?.message || error.message;
 
     // Handle duplicate association safely
     if (msg?.includes("already exists")) {
-      logger.warn(`⚠️ Association already exists: Contact (${contactId}) ↔ Deal (${dealId})`);
+      logger.warn(
+        `⚠️ Association already exists: Contact (${contactId}) ↔ Deal (${dealId})`,
+      );
       return true;
     }
 
@@ -699,14 +509,15 @@ async function associateContactWithDeal({ contactId, dealId }) {
 }
 
 // Associate Products to Deal (Order)
-async function associateProductsToDeal(dealId, productIds,) {
-  const url = 'https://api.hubapi.com/crm/v3/associations/deals/products/batch/create';
+async function associateProductsToDeal(dealId, productIds) {
+  const url =
+    "https://api.hubapi.com/crm/v3/associations/deals/products/batch/create";
 
   // Build the inputs array
-  const inputs = productIds.map(productId => ({
+  const inputs = productIds.map((productId) => ({
     from: { id: dealId },
     to: { id: productId },
-    type: 'deal_to_product'
+    type: "deal_to_product",
   }));
 
   try {
@@ -715,40 +526,82 @@ async function associateProductsToDeal(dealId, productIds,) {
       { inputs },
       {
         headers: {
-          'Authorization': `Bearer ${process.env.HUBSPOT_API_KEY}`,
-          'Content-Type': 'application/json'
-        }
-      }
+          Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      },
     );
-    console.log('✅ Association Response:', response.data);
+    console.log("✅ Association Response:", response.data);
     return response.data;
   } catch (error) {
-    console.error('❌ Error associating products to deal:', error.response?.data || error.message);
+    console.error(
+      "❌ Error associating products to deal:",
+      error.response?.data || error.message,
+    );
     throw error;
   }
 }
 
 
+// Create a (deal)line Items
+
+async function createLineItem(payload) {
+  try {
+    const response = await axios.post(
+      "https://api.hubapi.com/crm/v3/objects/line_items",
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("❌ Line Item Creation Error:", error.response?.data || error);
+    return null;
+  }
+}
+
+// Associate Line Item with Deal
+
+async function associateLineItemWithDeal({ lineItemId, dealId }) {
+  try {
+    const response = await axios.put(
+      `https://api.hubapi.com/crm/v3/objects/line_items/${lineItemId}/associations/deals/${dealId}/line_item_to_deal`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.HUBSPOT_API_KEY}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("❌ LineItem Association Error:", error.response?.data || error);
+    return null;
+  }
+}
 
 
-
-export { searchHubspotContactByEmail,
+export {
+  searchHubspotContactByEmail,
   updateHubspotContact,
   createHubspotContact,
   searchHubspotProductBySku,
-updateHubspotProduct,
-createHubspotProduct,
-upsertHubspotProduct,
-upsertHubspotOrder,
-searchDealsBasic,
-updateHubspotOrder,
-createHubspotOrder,
-upsertHubspotContact,
-associateContactWithDeal,
-associateProductsToDeal,
-
-
-
-
-
+  updateHubspotProduct,
+  createHubspotProduct,
+  upsertHubspotProduct,
+  upsertHubspotOrder,
+  searchDealsBySourceId,
+  updateHubspotOrder,
+  createHubspotOrder,
+  upsertHubspotContact,
+  associateContactWithDeal,
+  associateProductsToDeal,
+  createLineItem,
+  associateLineItemWithDeal
 };
