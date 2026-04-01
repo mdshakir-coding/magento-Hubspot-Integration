@@ -5,6 +5,8 @@ import { searchHubspotProductBySku } from "../services/hubspot.js";
 import { updateHubspotProduct } from "../services/hubspot.js";
 import { createHubspotProduct } from "../services/hubspot.js";
 import {upsertHubspotProduct} from "../services/hubspot.js";
+import{associateProductsToDeal} from "../services/hubspot.js";
+
 
 async function syncProducts() {
   try {
@@ -78,12 +80,12 @@ async function syncProducts() {
         const upsertedProduct = await upsertHubspotProduct(product);
 
         if (upsertedProduct?.id) {
-          logger.info(`✅ Upserted Product ID: ${upsertedProduct.id}`);
+          logger.info(`✅ Upserted Product ID: ${JSON.stringify(upsertedProduct.id,null,2)}`);
         } else {
-          logger.error(`❌ Failed to upsert product SKU: ${product?.sku}`);
+          logger.error(`❌ Failed to upsert product SKU: ${JSON.stringify(product?.sku)}`);
         }
       } catch (error) {
-        logger.error(`❌ Error processing Product ${product.id}:`, error);
+        logger.error(`❌ Error processing Product ${JSON.stringify(product?.sku)}:`, error);
       }
       
     }
@@ -92,4 +94,15 @@ async function syncProducts() {
   }
 }
 
+
+
+
+
+
+
+
 export { syncProducts };
+
+
+
+//Deal ↔ Line Item ↔ Product

@@ -12,10 +12,10 @@ function getCustomAttribute(product, code) {
   return attr ? attr.value : null;
 }
 
-function buildProductPayload(product) {
-  const description = getCustomAttribute(product.description);
-  const shortDescription = getCustomAttribute(product.short_description);
-  const urlKey = getCustomAttribute(product.url_key);
+function buildProductPayload(product, code) {
+  const description = getCustomAttribute(product, code);
+  const shortDescription = getCustomAttribute(product, "short_description");
+  const urlKey = getCustomAttribute(product, "url_key");
 
   return {
     properties: {
@@ -24,17 +24,18 @@ function buildProductPayload(product) {
       description: safeString(description || shortDescription),
       price: product.price ? String(product.price) : null,
       hs_sku: safeString(product.sku),
-      hs_url: urlKey
+      hs_url: urlKey,
+
+      // hs_product_type: safeString(product.type_id),
 
 
-      // ⚠️ Only include if exists in HubSpot
-      // magento_product_id: safeString(product.id),
-
-    //   product_url: urlKey
-    //     ? `https://sensidyne.com/shop/${safeString(urlKey)}`
-    //     : "",
+    
     },
   };
 }
+
+
+
+
 
 export { buildProductPayload };

@@ -9,13 +9,15 @@ import{syncProducts} from "./controller/ProductToProducts.controller.js";
 import{syncOrders} from "./controller/ordersToDeal.controller.js";
 
 
+
 // logger.info("Loaded API Token:", process.env.HUBSPOT_ACCESS_TOKEN);
 const PORT = process.env.PORT || 3700;
 
 app.listen(PORT, () => {
-  syncCustomers();
-  // syncProducts();
+  // syncCustomers();
+  syncProducts();
   // syncOrders();
+
 
 
   logger.info(`Server running on port ${PORT}`);
