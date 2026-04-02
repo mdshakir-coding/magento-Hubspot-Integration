@@ -45,7 +45,7 @@ async function searchHubspotContactByEmail(email) {
 
     return results[0];
   } catch (error) {
-    console.error(
+    logger.error(
       "❌ Error searching HubSpot contact:",
       error.response?.data || error.message,
     );
@@ -70,11 +70,11 @@ async function updateHubspotContact(contactId, properties) {
       },
     );
 
-    logger.info(`🔄 Contact updated successfully | ID: ${contactId}`);
+    logger.info(`🔄 Contact updated successfully | ID: ${JSON.stringify(contactId)}`);
 
     return response.data;
   } catch (error) {
-    console.error(
+    logger.error(
       "❌ Error updating contact:",
       error.response?.data || error.message,
     );
@@ -105,7 +105,7 @@ async function createHubspotContact(properties) {
 
     return contactId;
   } catch (error) {
-    console.error(
+    logger.error(
       "❌ Error creating contact:",
       error.response?.data || error.message,
     );
@@ -119,6 +119,9 @@ async function upsertHubspotContact(customer) {
   try {
     // 1️⃣ Build payload
     const customerPayload = buildCustomerPayload(customer);
+    logger.info(
+      `✅ Customer Payload:\n${JSON.stringify(customerPayload, null, 2)}`,
+    );
 
     // 2️⃣ Normalize email
     const email = customerPayload?.email?.toLowerCase()?.trim();
@@ -347,14 +350,14 @@ async function searchDealsBySourceId(sourceid) {
     const deal = response.data?.results?.[0] || null;
 
     if (deal) {
-      console.log("✅ Deal Found:", deal.id);
+      logger.info("✅ Deal Found:", deal.id);
     } else {
-      console.log("❌ No deal found for sourceid:", sourceid);
+      logger.warn("❌ No deal found for sourceid:", sourceid);
     }
 
     return deal;
   } catch (error) {
-    console.error(
+    logger.error(
       "❌ Error searching deals:",
       error.response?.data || error.message
     );
@@ -378,7 +381,7 @@ async function updateHubspotOrder(orderId, payload) {
       }
     );
 
-    logger.info(`✅ Updated Deal ID ${orderId} successfully`);
+    logger.info(`✅ Updated Deal ID ${JSON.stringify(orderId)} successfully`);
     return response.data;
   } catch (error) {
     logger.error(
@@ -418,7 +421,8 @@ async function createHubspotOrder(orderPayload) {
 async function upsertHubspotOrder(order) {
   try {
     const orderPayload = buildOrdersPayload(order);
-    logger.info(`✅ deal Payload:\n${JSON.stringify(orderPayload, null, 2)}`);
+    logger.info(`✅ Deal Payload:\n${JSON.stringify(orderPayload, null, 2)}`);
+    
 
     const sourceid = order?.increment_id;
     if (!sourceid) {
@@ -531,10 +535,10 @@ async function associateProductsToDeal(dealId, productIds) {
         },
       },
     );
-    console.log("✅ Association Response:", response.data);
+    logger.info("✅ Association Response:", response.data);
     return response.data;
   } catch (error) {
-    console.error(
+    logger.error(
       "❌ Error associating products to deal:",
       error.response?.data || error.message,
     );
@@ -560,7 +564,7 @@ async function createLineItem(payload) {
 
     return response.data;
   } catch (error) {
-    console.error("❌ Line Item Creation Error:", error.response?.data || error);
+    logger.error("❌ Line Item Creation Error:", error.response?.data || error);
     return null;
   }
 }
@@ -581,7 +585,7 @@ async function associateLineItemWithDeal({ lineItemId, dealId }) {
 
     return response.data;
   } catch (error) {
-    console.error("❌ LineItem Association Error:", error.response?.data || error);
+    logger.error("❌ LineItem Association Error:", error.response?.data || error);
     return null;
   }
 }

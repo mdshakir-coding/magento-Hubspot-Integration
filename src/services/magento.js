@@ -64,7 +64,7 @@ async function getMagentoCustomers() {
       const data = JSON.parse(response);
       const customers = data.items || [];
 
-      console.log(`👤 Page ${currentPage}: ${customers.length} customers`);
+      logger.info(`👤 Page ${currentPage}: ${ JSON.stringify(customers.length)} customers`);
 
       // ✅ Collect data
       allCustomers.push(...customers);
@@ -78,12 +78,12 @@ async function getMagentoCustomers() {
       }
 
     } catch (err) {
-      console.error(`❌ Error on page ${currentPage}:`, err.message);
+      logger.error(`❌ Error on page ${currentPage}:`, err.message);
       break;
     }
   }
 
-  console.log(`✅ Total Customers: ${allCustomers.length}`);
+  logger.info(`✅ Total Customers: ${JSON.stringify(allCustomers.length)}`);
   return allCustomers;
 }
 
@@ -121,7 +121,7 @@ async function getMagentoProducts() {
 
       const products = data.items || [];
 
-      console.log(`📦 Page ${currentPage}: ${products.length} products`);
+      logger.info(`📦 Page ${JSON.stringify(currentPage)}: ${JSON.stringify(products.length)} products`);
 
       // Add to master list
       allProducts.push(...products);
@@ -135,12 +135,12 @@ async function getMagentoProducts() {
       }
 
     } catch (err) {
-      console.error(`❌ Error on page ${currentPage}:`, err.message);
+      logger.error(`❌ Error on page ${JSON.stringify(currentPage)}:`, err.message);
       break;
     }
   }
 
-  console.log(`✅ Total Products Fetched: ${allProducts.length}`);
+  logger.info(`✅ Total Products Fetched: ${JSON.stringify(allProducts.length)}`);
   return allProducts;
 }
 
@@ -178,7 +178,7 @@ async function getMagentoOrders() {
       const data = JSON.parse(response);
       const orders = data.items || [];
 
-      logger.info(`🧾 Page ${currentPage}: ${orders.length} orders`);
+      logger.info(`🧾 Page ${currentPage}: ${JSON.stringify(orders.length)} orders`);
 
       // ✅ Add to master list
       allOrders.push(...orders);
@@ -192,7 +192,7 @@ async function getMagentoOrders() {
       }
 
     } catch (err) {
-      logger.error(`❌ Error on page ${currentPage}:`, err.message);
+      logger.error(`❌ Error on page ${JSON.stringify(currentPage)}:`, err.message);
       break;
     }
   }

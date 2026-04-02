@@ -30,147 +30,169 @@ async function syncProducts() {
 
 async function processSingleProduct(
   product = {
-    id: 973,
-    sku: "783-0012-01-R",
-    name: "Battery Pack for GilAir Plus",
-    attribute_set_id: 18,
-    price: 226.88,
-    status: 1,
-    visibility: 4,
-    type_id: "simple",
-    created_at: "2017-02-03 01:34:24",
-    updated_at: "2025-06-10 12:50:51",
-    weight: 2,
-    extension_attributes: {
-      website_ids: [1],
-      category_links: [
-        {
-          position: 1,
-          category_id: "43",
+            "id": 962,
+            "sku": "7017471",
+            "name": "Aspirator Bulb",
+            "attribute_set_id": 18,
+            "price": 7.59,
+            "status": 1,
+            "visibility": 4,
+            "type_id": "simple",
+            "created_at": "2016-12-28 20:37:46",
+            "updated_at": "2025-11-17 15:48:54",
+            "weight": 1,
+            "extension_attributes": {
+                "website_ids": [
+                    1
+                ],
+                "category_links": [
+                    {
+                        "position": 1,
+                        "category_id": "49"
+                    },
+                    {
+                        "position": 1,
+                        "category_id": "68"
+                    },
+                    {
+                        "position": 0,
+                        "category_id": "53"
+                    }
+                ]
+            },
+            "product_links": [],
+            "options": [],
+            "media_gallery_entries": [
+                {
+                    "id": 2965,
+                    "media_type": "image",
+                    "label": null,
+                    "position": 1,
+                    "disabled": false,
+                    "types": [
+                        "image",
+                        "small_image",
+                        "thumbnail"
+                    ],
+                    "file": "/a/s/aspirator_bulb.jpg"
+                }
+            ],
+            "tier_prices": [],
+            "custom_attributes": [
+                {
+                    "attribute_code": "image",
+                    "value": "/a/s/aspirator_bulb.jpg"
+                },
+                {
+                    "attribute_code": "small_image",
+                    "value": "/a/s/aspirator_bulb.jpg"
+                },
+                {
+                    "attribute_code": "thumbnail",
+                    "value": "/a/s/aspirator_bulb.jpg"
+                },
+                {
+                    "attribute_code": "options_container",
+                    "value": "container1"
+                },
+                {
+                    "attribute_code": "msrp_display_actual_price_type",
+                    "value": "0"
+                },
+                {
+                    "attribute_code": "url_key",
+                    "value": "aspirator-bulb"
+                },
+                {
+                    "attribute_code": "gift_message_available",
+                    "value": "0"
+                },
+                {
+                    "attribute_code": "url_path",
+                    "value": "aspirator-bulb"
+                },
+                {
+                    "attribute_code": "required_options",
+                    "value": "0"
+                },
+                {
+                    "attribute_code": "has_options",
+                    "value": "0"
+                },
+                {
+                    "attribute_code": "meta_title",
+                    "value": ""
+                },
+                {
+                    "attribute_code": "meta_keyword",
+                    "value": ""
+                },
+                {
+                    "attribute_code": "meta_description",
+                    "value": "Aspirator bulb for smoke tubes"
+                },
+                {
+                    "attribute_code": "tax_class_id",
+                    "value": "14"
+                },
+                {
+                    "attribute_code": "cpsd_url_key",
+                    "value": "0"
+                },
+                {
+                    "attribute_code": "category_ids",
+                    "value": [
+                        "49",
+                        "68",
+                        "53"
+                    ]
+                },
+                {
+                    "attribute_code": "short_description",
+                    "value": "Aspirator bulb for smoke tubes"
+                },
+                {
+                    "attribute_code": "sw_featured",
+                    "value": "0"
+                },
+                {
+                    "attribute_code": "description",
+                    "value": "Aspirator bulb for smoke tubes"
+                },
+                {
+                    "attribute_code": "country_of_manufacture",
+                    "value": ""
+                },
+                {
+                    "attribute_code": "c2c_featured",
+                    "value": "0"
+                },
+                {
+                    "attribute_code": "c2c_additional_catoverride",
+                    "value": "0"
+                },
+                {
+                    "attribute_code": "c2c_upc",
+                    "value": ""
+                },
+                {
+                    "attribute_code": "c2c_length",
+                    "value": ""
+                },
+                {
+                    "attribute_code": "c2c_width",
+                    "value": ""
+                },
+                {
+                    "attribute_code": "c2c_height",
+                    "value": ""
+                },
+                {
+                    "attribute_code": "product_image_size",
+                    "value": "0"
+                }
+            ]
         },
-        {
-          position: 1,
-          category_id: "45",
-        },
-        {
-          position: 0,
-          category_id: "71",
-        },
-      ],
-    },
-    product_links: [],
-    options: [],
-    media_gallery_entries: [
-      {
-        id: 3000,
-        media_type: "image",
-        label: "",
-        position: 1,
-        disabled: false,
-        types: ["image", "small_image", "thumbnail"],
-        file: "/g/i/gilair-plus-nimh-power-pack.jpg",
-      },
-    ],
-    tier_prices: [],
-    custom_attributes: [
-      {
-        attribute_code: "image",
-        value: "/g/i/gilair-plus-nimh-power-pack.jpg",
-      },
-      {
-        attribute_code: "small_image",
-        value: "/g/i/gilair-plus-nimh-power-pack.jpg",
-      },
-      {
-        attribute_code: "thumbnail",
-        value: "/g/i/gilair-plus-nimh-power-pack.jpg",
-      },
-      {
-        attribute_code: "options_container",
-        value: "container1",
-      },
-      {
-        attribute_code: "url_key",
-        value: "battery-pack-for-gilair-plus",
-      },
-      {
-        attribute_code: "url_path",
-        value: "battery-pack-for-gilair-plus",
-      },
-      {
-        attribute_code: "required_options",
-        value: "0",
-      },
-      {
-        attribute_code: "has_options",
-        value: "0",
-      },
-      {
-        attribute_code: "image_label",
-        value: " ",
-      },
-      {
-        attribute_code: "small_image_label",
-        value: " ",
-      },
-      {
-        attribute_code: "thumbnail_label",
-        value: " ",
-      },
-      {
-        attribute_code: "meta_title",
-        value: "",
-      },
-      {
-        attribute_code: "meta_keyword",
-        value: "",
-      },
-      {
-        attribute_code: "meta_description",
-        value: "GilAir Plus battery pack.",
-      },
-      {
-        attribute_code: "tax_class_id",
-        value: "14",
-      },
-      {
-        attribute_code: "category_ids",
-        value: ["43", "45", "71"],
-      },
-      {
-        attribute_code: "short_description",
-        value: "GilAir Plus battery pack.",
-      },
-      {
-        attribute_code: "description",
-        value: "Replacement battery pack for GilAir Plus air sampling pumps.",
-      },
-      {
-        attribute_code: "country_of_manufacture",
-        value: "US",
-      },
-      {
-        attribute_code: "c2c_upc",
-        value: "",
-      },
-      {
-        attribute_code: "c2c_length",
-        value: "",
-      },
-      {
-        attribute_code: "c2c_width",
-        value: "",
-      },
-      {
-        attribute_code: "c2c_height",
-        value: "",
-      },
-      {
-        attribute_code: "manufacturer",
-        value: "0",
-      },
-    ],
-  },
  ) {
   try {
     logger.info(`🔍 Processing Product: ${JSON.stringify(product, null, 2)}`);
@@ -179,7 +201,7 @@ async function processSingleProduct(
 
     if (upsertedProduct?.id) {
       logger.info(
-        `✅ Upserted Product ID: ${JSON.stringify(upsertedProduct.id, null, 2)}`,
+        `✅ Upserted Product ID: ${JSON.stringify(upsertedProduct, null, 2)}`,
       );
 
       // return; //todo remove

@@ -4,10 +4,12 @@ function mapOrderToLineItems(item, productInfo) {
   return {
     properties: {
 
-      name: item.name,
-      price: item.price,
-      quantity: item.qty_ordered,
-      hs_product_id: productInfo.id,
+      name: item?.name ||null,
+      price: item?.price ||null,
+      quantity: item?.qty_ordered ||null,
+      hs_product_id: productInfo?.id ||null,
+      hs_sku:item?.sku ||null,
+      hs_tax_amount:item?.tax_amount ||null,
 
     },
   };
