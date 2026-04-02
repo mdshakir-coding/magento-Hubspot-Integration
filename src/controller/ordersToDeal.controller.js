@@ -716,13 +716,13 @@ async function processSingleDeal(
       return;
     }
 
-    logger.info(`🔍 Searching contact for email: ${email}`);
+    logger.info(`🔍 Searching contact for email: ${JSON.stringify(email)}`);
 
     // 3️⃣ Search contact by email (DO NOT create here)
     const contact = await searchHubspotContactByEmail(email);
     if (!contact?.id) {
       logger.error(
-        `❌ Contact not found for email ${email}. Run syncCustomers() first.`,
+        `❌ Contact not found for email ${JSON.stringify(email)}. Run syncCustomers() first.`,
       );
       return;
     }

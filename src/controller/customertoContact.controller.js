@@ -228,7 +228,7 @@ async function ProcessSingleContact(
         },
 ) {
   try {
-    logger.info(`🔍 Processing Customer: ${JSON.stringify(customer, null, 2)}`);
+    logger.info(`[Magento] Contact Record: ${JSON.stringify(customer, null, 2)}`);
 
     // Upsert customer to HubSpot
     let upsertedContactId = null;

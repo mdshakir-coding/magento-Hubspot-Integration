@@ -195,7 +195,7 @@ async function processSingleProduct(
         },
  ) {
   try {
-    logger.info(`🔍 Processing Product: ${JSON.stringify(product, null, 2)}`);
+    logger.info(`[Magento] Product Record:: ${JSON.stringify(product, null, 2)}`);
 
     const upsertedProduct = await upsertHubspotProduct(product);
 
