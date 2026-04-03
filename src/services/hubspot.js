@@ -54,7 +54,6 @@ async function searchHubspotContactByEmail(email) {
 }
 
 //  Update HubSpot contact
-
 async function updateHubspotContact(contactId, properties) {
   try {
     const response = await axios.patch(
@@ -319,7 +318,7 @@ async function upsertHubspotProduct(product) {
   }
 }
 
-
+// Search Deal by Source ID
 async function searchDealsBySourceId(sourceid) {
   try {
     const response = await axios.post(
@@ -353,6 +352,7 @@ async function searchDealsBySourceId(sourceid) {
       logger.info("✅ Deal Found:", deal.id);
     } else {
       logger.warn("❌ No deal found for sourceid:", sourceid);
+      return null;
     }
 
     return deal;
@@ -366,7 +366,7 @@ async function searchDealsBySourceId(sourceid) {
 }
 
 
-
+// Update HubSpot Order
 async function updateHubspotOrder(orderId, payload) {
   try {
 
@@ -454,7 +454,7 @@ async function upsertHubspotOrder(order) {
   }
 }
 
-
+// Associate Contact with Deal
 async function associateContactWithDeal({ contactId, dealId }) {
   if (!contactId || !dealId) {
     logger.error("❌ Missing contactId or dealId");
@@ -547,7 +547,7 @@ async function associateProductsToDeal(dealId, productIds) {
 }
 
 
-// Create a (deal)line Items
+// Create a (deal) with line Items
 
 async function createLineItem(payload) {
   try {

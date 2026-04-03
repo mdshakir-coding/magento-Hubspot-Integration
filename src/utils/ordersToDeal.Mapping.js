@@ -70,7 +70,8 @@ function buildOrdersPayload(order) {
   return {
     properties: {
       sourceid: order?.increment_id || null,
-      dealname: order?.store_name || null,
+      // dealname: order?.store_name || null,
+      dealname:order?.increment_id || null,
       amount: order?.grand_total || null,
       customer_group:order?.customer_group_id || null,
       pipeline: "884026284", 
