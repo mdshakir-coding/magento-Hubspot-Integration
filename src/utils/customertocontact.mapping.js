@@ -11,42 +11,46 @@ function buildCustomerPayload(customer) {
 
   return {
 
-    shipping_detail: safeString(customer?.default_shipping),
+    // shipping_detail: safeString(customer?.default_shipping),
 
-    firstname: safeString(customer?.firstname),
-    lastname: safeString(customer?.lastname),
-    email: safeString(customer?.email),
+    firstname: safeString(customer?.customer_firstname),
+    lastname: safeString(customer?.customer_lastname),
+    email: safeString(customer?.customer_email),
+ 
+    phone: safeString(customer?.billing_address?.telephone),
+    company: safeString(customer?.billing_address?.company),
+    address: safeString(customer?.billing_address?.street),
+    city: safeString(customer?.billing_address?.city),
+    state: safeString(customer?.billing_address?.region),
+    zip: safeString(customer?.billing_address?.postcode),
+    country: safeString(customer?.billing_address?.country_id),
 
-    phone: safeString(address?.telephone),
-    company: safeString(address?.company),
+    // address: Array.isArray(address?.street)
+    //   ? address.street.map((s) => safeString(s)).join(" ")
+    //   : safeString(address?.street),
 
-    address: Array.isArray(address?.street)
-      ? address.street.map((s) => safeString(s)).join(" ")
-      : safeString(address?.street),
+    // city: safeString(billing_address?.city),
 
-    city: safeString(address?.city),
+    // // ✅ FIXED state handling
+    // state: safeString(
+    //   typeof address?.region === "object"
+    //     ? address?.region?.region_code
+    //     : address?.region,
+    // ),
 
-    // ✅ FIXED state handling
-    state: safeString(
-      typeof address?.region === "object"
-        ? address?.region?.region_code
-        : address?.region,
-    ),
+    // zip: safeString(address?.postcode),
+    // country: safeString(address?.country_id),
 
-    zip: safeString(address?.postcode),
-    country: safeString(address?.country_id),
+    // fax: safeString(address?.fax),
+    // website: safeString(customer?.website_id),
 
-    fax: safeString(address?.fax),
-    website: safeString(customer?.website_id),
-
-    // account: safeString(customer?.created_in),
-
-    // ✅ FIXED date (IMPORTANT)
-    // website: customer?.created_in,
-
-    gender: safeString(customer?.gender),
-    tax_exempt_certificate: safeString(customer?.taxvat),
+    // gender: safeString(customer?.gender),
+    // tax_exempt_certificate: safeString(customer?.taxvat),
   };
 }
+
+
+
+
 
 export { buildCustomerPayload };

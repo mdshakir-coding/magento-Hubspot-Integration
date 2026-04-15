@@ -116,10 +116,11 @@ async function createHubspotContact(properties) {
 // UPSERT HUBSPOT CONTACT
 async function upsertHubspotContact(customer) {
   try {
+    
     // 1️⃣ Build payload
     const customerPayload = buildCustomerPayload(customer);
     logger.info(
-      `✅ Customer Payload:\n${JSON.stringify(customerPayload, null, 2)}`,
+      `✅ Contact Payload:\n${JSON.stringify(customerPayload, null, 2)}`,
     );
 
     // 2️⃣ Normalize email
@@ -133,7 +134,7 @@ async function upsertHubspotContact(customer) {
     // 3️⃣ Search for existing contact by email
     const existingContact = await searchHubspotContactByEmail(email);
     logger.info(
-      `🔍 Search Result for Email ${email}:\n${JSON.stringify(existingContact, null, 2)}`,
+      `🔍 Search Contact Result for Email ${email}:\n${JSON.stringify(existingContact, null, 2)}`,
     );
 
     // 4️⃣ Update if exists
@@ -349,7 +350,7 @@ async function searchDealsBySourceId(sourceid) {
     const deal = response.data?.results?.[0] || null;
 
     if (deal) {
-      logger.info("✅ Deal Found:", deal.id);
+      // logger.info("✅ Deal Found:", deal.id);
     } else {
       logger.warn("❌ No deal found for sourceid:", sourceid);
       return null;
@@ -437,7 +438,7 @@ async function upsertHubspotOrder(order) {
     );
 
     if (existingOrder?.id) {
-      logger.info(`🔄 Order exists. Updating Source ID: ${sourceid}`);
+      logger.info(`🔄 Deal exists. Updating Source ID: ${sourceid}`);
       return await updateHubspotOrder(existingOrder.id, orderPayload);
     }
 
