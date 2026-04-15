@@ -18,12 +18,12 @@ function buildCustomerPayload(customer) {
     email: safeString(customer?.customer_email),
  
     phone: safeString(customer?.billing_address?.telephone),
-    company: safeString(customer?.billing_address?.company),
-    address: safeString(customer?.billing_address?.street),
-    city: safeString(customer?.billing_address?.city),
-    state: safeString(customer?.billing_address?.region),
-    zip: safeString(customer?.billing_address?.postcode),
-    country: safeString(customer?.billing_address?.country_id),
+    // company: safeString(customer?.billing_address?.company),
+    // address: safeString(customer?.billing_address?.street),
+    // city: safeString(customer?.billing_address?.city),
+    // state: safeString(customer?.billing_address?.region),
+    // zip: safeString(customer?.billing_address?.postcode),
+    // country: safeString(customer?.billing_address?.country_id),
 
     // address: Array.isArray(address?.street)
     //   ? address.street.map((s) => safeString(s)).join(" ")
