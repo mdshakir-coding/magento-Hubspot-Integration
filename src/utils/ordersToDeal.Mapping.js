@@ -1,3 +1,4 @@
+import {skuMapToProductTag} from "./orderToLineItem.Mapping.js";
 // function buildOrdersPayload(order) {
 //   if (!order) return null;
 
@@ -66,49 +67,86 @@
 //   };
 // }
 
+
+const pipelineMappingObject = {
+  "Air Sampling Pipeline" : "884026284",
+  "Gas DetecTubes Pipelinetor Tubes" : "884651785",
+  "Fixed Gas Pipeline" : "default",
+
+}
+
+const mapdealStage = {
+  "884026284" : "1329841703",
+  "884651785" : "1329921630",
+  "default" : "closedwon",
+}
+
 function buildOrdersPayload(order) {
+
+  const pipeline = (pipelineMappingObject );
+const dealStage = (mapdealStage);
+
+
+  
   return {
     properties: {
       sourceid: order?.increment_id || null,
       // dealname: order?.store_name || null,
-      dealname:order?.increment_id || null,
+      dealname: order?.increment_id || null,
       amount: order?.grand_total || null,
-      customer_group:order?.customer_group_id || null,
-      pipeline: "884026284", 
+      customer_group: order?.customer_group_id || null,
+      pipeline: "884651785",
+      dealstage: "1329921630",
+    
 
       // Customer Mappiing------------------
-      customer_firstname:order?.customer_firstname ||null,
-      customer_lastname:order?.customer_lastname ||null,
-      customer_email:order?.customer_email ||null,
+      customer_firstname: order?.customer_firstname || null,
+      customer_lastname: order?.customer_lastname || null,
+      customer_email: order?.customer_email || null,
 
       // Billing Mapping --------------------------
-      billing_firstname:order?.billing_address?.firstname || null,
-      billing_lastname:order?.billing_address?.lastname || null,
-      billing_company:order?.billing_address?.company || null,
-      billing_city:order?.billing_address?.city || null,
-      billing_region:order?.billing_address?.region || null,
-      billing_postcode:order?.billing_address?.postcode || null,
-      billing_telephone:order?.billing_address?.telephone || null,
-      billing_address:order?.billing_address?.street?.join(", ") || null,
-   
-     // Shipping Mapping-------------------------
-     shipping_firstname:order?.extension_attributes?.shipping_assignments?.[0]?.shipping?.address?.firstname || null,
-    shipping_lastname:order?.extension_attributes?.shipping_assignments?.[0]?.shipping?.address?.lastname || null,
-    shipping_company:order?.extension_attributes?.shipping_assignments?.[0]?.shipping?.address?.company || null,
-    shipping_city: order?.extension_attributes?.shipping_assignments?.[0]?.shipping?.address?.city || null,  
-    shipping_region:order?.extension_attributes?.shipping_assignments?.[0]?.shipping?.address?.region || null,
-    shipping_postcode:order?.extension_attributes?.shipping_assignments?.[0]?.shipping?.address?.postcode || null, 
-    shipping_telephone:order?.extension_attributes?.shipping_assignments?.[0]?.shipping?.address?.telephone || null,
-    shipping_address:order?.extension_attributes?.shipping_assignments?.[0]?.shipping?.address?.street?.join(", ") || null,
-      
-      
+      billing_firstname: order?.billing_address?.firstname || null,
+      billing_lastname: order?.billing_address?.lastname || null,
+      billing_company: order?.billing_address?.company || null,
+      billing_city: order?.billing_address?.city || null,
+      billing_region: order?.billing_address?.region || null,
+      billing_postcode: order?.billing_address?.postcode || null,
+      billing_telephone: order?.billing_address?.telephone || null,
+      billing_address: order?.billing_address?.street?.join(", ") || null,
+
+      // Shipping Mapping-------------------------
+      shipping_firstname:
+        order?.extension_attributes?.shipping_assignments?.[0]?.shipping
+          ?.address?.firstname || null,
+      shipping_lastname:
+        order?.extension_attributes?.shipping_assignments?.[0]?.shipping
+          ?.address?.lastname || null,
+      shipping_company:
+        order?.extension_attributes?.shipping_assignments?.[0]?.shipping
+          ?.address?.company || null,
+      shipping_city:
+        order?.extension_attributes?.shipping_assignments?.[0]?.shipping
+          ?.address?.city || null,
+      shipping_region:
+        order?.extension_attributes?.shipping_assignments?.[0]?.shipping
+          ?.address?.region || null,
+      shipping_postcode:
+        order?.extension_attributes?.shipping_assignments?.[0]?.shipping
+          ?.address?.postcode || null,
+      shipping_telephone:
+        order?.extension_attributes?.shipping_assignments?.[0]?.shipping
+          ?.address?.telephone || null,
+      shipping_address:
+        order?.extension_attributes?.shipping_assignments?.[0]?.shipping?.address?.street?.join(
+          ", ",
+        ) || null,
+
       // contact_name:order?.customer_firstname || null,
       // order_subtotal:data?.base_subtotal || null,  // fields error
       // shipping_cost:data?.shipping_amount || null, // fields error
       // associated_contact_email:order?.customer_email || null,
-      // refunded_amount:order?.total_invoiced || null, 
+      // refunded_amount:order?.total_invoiced || null,
       // pickup_location:order?.base_currency_code || null,
-
     },
   };
 }

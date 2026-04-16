@@ -3739,6 +3739,8 @@ async function processSingleDeal(
     const contactId = upsertedContact;
     logger.info(`✅ Contact ID: ${JSON.stringify(contactId, null, 2)}`);
 
+    return;
+
     // 5️⃣ Create Line Items + Associate with Deal
     if (order?.items?.length) {
       for (const item of order.items) {

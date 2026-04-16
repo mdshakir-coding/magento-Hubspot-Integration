@@ -26,6 +26,7 @@ app.listen(PORT, () => {
 
   // ProcessSingleContact();
   // processSingleProduct();
-  processSingleDeal();
   // ProcessSingleContact();
+  processSingleDeal();
+  
 });
