@@ -410,6 +410,7 @@ async function createHubspotOrder(orderPayload) {
     );
 
     logger.info(`✅ Created new HubSpot deals successfully`);
+    logger.info(`➕ Deal ID: ${response.data.id}`);
     return response.data;
   } catch (error) {
     logger.error("❌ Error creating HubSpot deals:", error.message);

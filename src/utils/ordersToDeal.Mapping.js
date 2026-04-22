@@ -155,4 +155,49 @@ const dealStage = mapdealStage[pipeline]
   };
 }
 
+
+// function buildOrdersPayload(order) {
+//   const customer = order?.customer;
+
+//   const billingAddress = customer.addresses.find(
+//     addr => addr.id == customer.default_billing
+//   );
+
+//   const shippingAddress = customer.addresses.find(
+//     addr => addr.id == customer.default_shipping
+//   );
+
+//   return {
+//     properties: {
+//       sourceid: customer?.id || null,
+//       dealname: `${customer?.firstname} ${customer?.lastname}` || null,
+
+//       // Customer
+//       customer_firstname: customer?.firstname || null,
+//       customer_lastname: customer?.lastname || null,
+//       customer_email: customer?.email || null,
+
+//       // Billing
+//       billing_firstname: billingAddress?.firstname || null,
+//       billing_lastname: billingAddress?.lastname || null,
+//       billing_company: billingAddress?.company || null,
+//       billing_city: billingAddress?.city || null,
+//       billing_region: billingAddress?.region?.region || null,
+//       billing_postcode: billingAddress?.postcode || null,
+//       billing_telephone: billingAddress?.telephone || null,
+//       billing_address: billingAddress?.street?.join(", ") || null,
+
+//       // Shipping
+//       shipping_firstname: shippingAddress?.firstname || null,
+//       shipping_lastname: shippingAddress?.lastname || null,
+//       shipping_company: shippingAddress?.company || null,
+//       shipping_city: shippingAddress?.city || null,
+//       shipping_region: shippingAddress?.region?.region || null,
+//       shipping_postcode: shippingAddress?.postcode || null,
+//       shipping_telephone: shippingAddress?.telephone || null,
+//       shipping_address: shippingAddress?.street?.join(", ") || null,
+//     },
+//   };
+// }
+
 export { buildOrdersPayload };
