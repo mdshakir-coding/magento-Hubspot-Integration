@@ -997,6 +997,7 @@ function mapOrderToLineItems(item, productInfo) {
       hs_sku: sku || null,
       hs_tax_amount: item?.tax_amount || null,
       hs_sku: productTag, // Maps the pipeline/tag to your custom HubSpot property
+      
     },
   };
 }

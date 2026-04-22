@@ -3739,7 +3739,7 @@ async function processSingleDeal(
     const contactId = upsertedContact;
     logger.info(`✅ Contact ID: ${JSON.stringify(contactId, null, 2)}`);
 
-    return;
+    // return; //todo remove after Testing
 
     // 5️⃣ Create Line Items + Associate with Deal
     if (order?.items?.length) {
@@ -3753,6 +3753,7 @@ async function processSingleDeal(
         logger.info(
           `🔍 Search Product by SKU ${item.sku}:\n${JSON.stringify(productInfo, null, 2)}`,
         );
+
 
         const payload = mapOrderToLineItems(item, productInfo);
         logger.info(

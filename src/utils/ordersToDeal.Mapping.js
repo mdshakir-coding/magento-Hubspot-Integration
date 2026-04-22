@@ -66,12 +66,12 @@ import {skuMapToProductTag} from "./orderToLineItem.Mapping.js";
 //     },
 //   };
 // }
-
+// Gillian / FDT / GDT
 
 const pipelineMappingObject = {
-  "Air Sampling Pipeline" : "884026284",
-  "Gas DetecTubes Pipelinetor Tubes" : "884651785",
-  "Fixed Gas Pipeline" : "default",
+  "Gilian E-Commerce" : "884026284",
+  "FGD E-Commerce" : "884651785",
+  "GDT E-Commerce" : "default",
 
 }
 
@@ -83,8 +83,9 @@ const mapdealStage = {
 
 function buildOrdersPayload(order) {
 
-  const pipeline = (pipelineMappingObject );
-const dealStage = (mapdealStage);
+const skuTag = skuMapToProductTag[order?.items?.[0]?.sku] || "default";
+const pipeline = pipelineMappingObject[skuTag];
+const dealStage = mapdealStage[pipeline]
 
 
   
@@ -95,8 +96,11 @@ const dealStage = (mapdealStage);
       dealname: order?.increment_id || null,
       amount: order?.grand_total || null,
       customer_group: order?.customer_group_id || null,
-      pipeline: "884651785",
-      dealstage: "1329921630",
+      // pipeline: "884651785",  
+      // dealstage: "1329921630",
+
+      pipeline: pipeline ||null,
+      dealstage: dealStage || null,
     
 
       // Customer Mappiing------------------
