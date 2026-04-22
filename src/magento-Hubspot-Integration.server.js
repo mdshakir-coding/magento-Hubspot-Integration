@@ -23,10 +23,6 @@ const PORT = process.env.PORT || 3700;
 
 app.listen(PORT, () => {
   logger.info(`Server running on port ${PORT}`);
-
-  // ProcessSingleContact();
-  // processSingleProduct();
-  // ProcessSingleContact();
-  processSingleDeal();
-  
 });
+
+syncOrders();
