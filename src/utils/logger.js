@@ -1,54 +1,219 @@
+// import { createLogger, format, transports } from "winston";
+// import "winston-daily-rotate-file";
 
+// const { combine, timestamp, printf, errors, colorize } = format;
 
-import winston from "winston";
+// // Custom timestamp (12-hour)
+// const customTimestamp = timestamp({
+//   format: () =>
+//     new Date().toLocaleString("en-IN", {
+//       hour: "numeric",
+//       minute: "numeric",
+//       second: "numeric",
+//       hour12: true,
+//       day: "2-digit",
+//       month: "2-digit",
+//       year: "numeric",
+//     }),
+// });
 
-const { combine, timestamp, printf, colorize, errors } = winston.format;
+// const consoleFormat = printf(
+//   ({ level, message, timestamp, stack, ...meta }) => {
+//     const metaString =
+//       meta && Object.keys(meta).length
+//         ? `\n${JSON.stringify(meta, null, 2)}`
+//         : "";
 
-const timeFormat = "YYYY-MM-DD hh:mm:ss a";
+//     return `${timestamp}  [${level}] - ${stack || message}${metaString}`;
+//   }
+// );
 
-const consoleFormat = printf(({ level, message, timestamp, stack }) => {
-  return `${timestamp} | ${level} | ${stack || message}`;
-});
+// const fileFormat = printf(({ level, message, timestamp, stack, ...meta }) => {
+//   const metaString =
+//     meta && Object.keys(meta).length ? ` ${JSON.stringify(meta)}` : "";
 
-const fileFormat = printf(({ level, message, timestamp, stack }) => {
-  return `${timestamp} | ${level} | ${stack || message}`;
-});
+//   return `${timestamp}  [${level}] - ${stack || message}${metaString}`;
+// });
 
-const logger = winston.createLogger({
-  level: "debug",
+// const productionLogger = () => {
+//   const dailyError = new transports.DailyRotateFile({
+//     filename: "logs/error-%DATE%.log",
+//     datePattern: "YYYY-MM-DD",
+//     level: "error",
+//     zippedArchive: true,
+//     maxSize: "10m",
+//     maxFiles: "28d", // keep 28 days of logs
+//   });
 
-  format: combine(errors({ stack: true })),
+//   const dailyCombined = new transports.DailyRotateFile({
+//     filename: "logs/combined-%DATE%.log",
+//     datePattern: "YYYY-MM-DD",
+//     level: process.env.LOG_LEVEL || "info", // logs info, warn, debug
+//     zippedArchive: true,
+//     maxSize: "10m",
+//     maxFiles: "28d",
+//   });
 
-  transports: [
-    new winston.transports.File({
-      filename: "logs/error.log",
-      level: "error",
-      format: combine(
-        timestamp({ format: timeFormat }),
-        fileFormat
-      ),
+//   return createLogger({
+//     level: process.env.LOG_LEVEL || "info",
+//     format: combine(customTimestamp, errors({ stack: true })),
+//     defaultMeta: { service: "serviceM8-hubspot-integration" },
+//     transports: [
+//       dailyCombined, // all logs
+//       dailyError, // error-only logs
+//       new transports.Console({
+//         format: combine(customTimestamp, consoleFormat),
+//         // format: combine(colorize(), customTimestamp, consoleFormat),
+//         level: "info",
+//         handleExceptions: true,
+//         handleRejections: true,
+//       }),
+//     ],
+//     exceptionHandlers: [
+//       new transports.DailyRotateFile({
+//         filename: "logs/exceptions-%DATE%.log",
+//         datePattern: "YYYY-MM-DD",
+//         maxSize: "10m",
+//         maxFiles: "14d",
+//         zippedArchive: true,
+//       }),
+//     ],
+//     rejectionHandlers: [
+//       new transports.DailyRotateFile({
+//         filename: "logs/rejections-%DATE%.log",
+//         datePattern: "YYYY-MM-DD",
+//         maxSize: "10m",
+//         maxFiles: "14d",
+//         zippedArchive: true,
+//       }),
+//     ],
+//   });
+// };
+
+// // Select logger based on environment
+// const logger =
+//   process.env.NODE_ENV === "production"
+//     ? productionLogger()
+//     : createLogger({
+//         level: "info",
+//         format: combine(customTimestamp, errors({ stack: true })),
+//         transports: [
+//           new transports.Console({
+//             format: combine(colorize(), customTimestamp, consoleFormat),
+//             handleExceptions: true,
+//             handleRejections: true,
+//           }),
+//           new transports.File({
+//             filename: "logs/development.log",
+//             format: fileFormat,
+//             level: "debug",
+//             maxsize: 5 * 1024 * 1024, // 5MB
+//             handleExceptions: true,
+//             handleRejections: true,
+//           }),
+//         ],
+//       });
+
+// export { logger };
+
+import { createLogger, format, transports } from "winston";
+import "winston-daily-rotate-file";
+
+const { combine, timestamp, printf, errors, colorize } = format;
+
+// Custom Timestamp
+const customTimestamp = timestamp({
+  format: () =>
+    new Date().toLocaleString("en-IN", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      hour12: true,
     }),
-
-    new winston.transports.File({
-      filename: "logs/combined.log",
-      format: combine(
-        timestamp({ format: timeFormat }),
-        fileFormat
-      ),
-    }),
-  ],
 });
 
-if (process.env.NODE_ENV !== "production") {
-  logger.add(
-    new winston.transports.Console({
-      format: combine(
-        colorize({ all: true }), // ONLY console gets colors
-        timestamp({ format: timeFormat }),
-        consoleFormat
-      ),
-    })
-  );
-}
+// Formatting Logic
+const consoleFormat = printf(
+  ({ level, message, timestamp, stack, ...meta }) => {
+    const metaData = Object.keys(meta).length
+      ? `\n${JSON.stringify(meta, null, 2)}`
+      : "";
+    return `${timestamp} [${level}]: ${stack || message}${metaData}`;
+  }
+);
 
-export  default logger;
+const fileFormat = printf(({ level, message, timestamp, stack, ...meta }) => {
+  const metaData = Object.keys(meta).length ? ` ${JSON.stringify(meta)}` : "";
+  return `${timestamp} [${level}]: ${stack || message}${metaData}`;
+});
+
+// Production Logger (Daily Rotation)
+const productionLogger = () => {
+  return createLogger({
+    level: process.env.LOG_LEVEL || "info",
+    format: combine(customTimestamp, errors({ stack: true })),
+    defaultMeta: { service: "magento-hubspot-integration" },
+    transports: [
+      new transports.DailyRotateFile({
+        filename: "logs/prod-combined-%DATE%.log",
+        datePattern: "YYYY-MM-DD",
+        zippedArchive: true,
+        maxSize: "20m",
+        maxFiles: "28d",
+        format: fileFormat,
+      }),
+      new transports.DailyRotateFile({
+        level: "error",
+        filename: "logs/prod-error-%DATE%.log",
+        datePattern: "YYYY-MM-DD",
+        zippedArchive: true,
+        maxSize: "20m",
+        maxFiles: "28d",
+        format: fileFormat,
+      }),
+      new transports.Console({
+        level: "info",
+        format: combine(colorize(), consoleFormat),
+      }),
+    ],
+  });
+};
+
+// Development Logger (Standard Files with Split Logic)
+const developmentLogger = () => {
+  return createLogger({
+    level: "debug", // Capture everything down to debug in dev
+    format: combine(customTimestamp, errors({ stack: true })),
+    transports: [
+      // 1. Console for real-time feedback
+      // new transports.Console({
+      //   format: combine(colorize(), consoleFormat),
+      //   handleExceptions: true,
+      //   handleRejections: true,
+      // }),
+      // 2. Combined file for ALL logs (debug, info, warn, error)
+      new transports.File({
+        filename: "logs/sync-magento.log",
+        format: fileFormat,
+        maxsize: 10 * 1024 * 1024, // 10MB
+      }),
+      // 3. Separate file for ONLY errors
+      new transports.File({
+        filename: "logs/magento-error.log",
+        level: "error",
+        format: fileFormat,
+        maxsize: 10 * 1024 * 1024, // 10MB
+      }),
+    ],
+  });
+};
+
+const logger =
+  process.env.NODE_ENV === "production"
+    ? productionLogger()
+    : developmentLogger();
+
+export default logger;
