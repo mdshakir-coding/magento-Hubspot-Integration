@@ -38,7 +38,7 @@ async function syncOrders() {
         const record = transformRecordToMagentoOrder(order);
         await processSingleDeal(record);
         saveProgress(i + 1);
-        return;
+        // return; // todo remove after testing
       } catch (error) {
         logger.error(`❌ Error processing Order :`, {
           status: error?.status,
